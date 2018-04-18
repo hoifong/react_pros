@@ -1,0 +1,5 @@
+/*.json
+/src
+/node_modules
+/.idea
+Gulpfile.js
