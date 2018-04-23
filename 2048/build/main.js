@@ -50,18 +50,18 @@ class Game extends React.Component{
     }
     render(){
         const grids = this.state.grids;
-        return <div>
-            <Grid values={grids}/>
-        </div>
+        return React.createElement("div", null, 
+            React.createElement(Grid, {values: grids})
+        )
     }
 }
 
 // 方阵
 function Grid(props){
     let units = props.values.map(function(val){
-        return <div className='row'>{val.map((val)=><Unit value={val}/>)}</div>;
+        return React.createElement("div", {className: "row"}, val.map((val)=>React.createElement(Unit, {value: val})));
     });
-    return <div className='Grid'>{units}</div>;
+    return React.createElement("div", {className: "Grid"}, units);
 }
 
 // 计算颜色及字体
@@ -77,8 +77,8 @@ function getcolor(value){
 // 渲染格子
 function Unit(props){
     var className = getcolor(props.value);
-    return <div className={className}>{props.value}</div>;
+    return React.createElement("div", {className: className}, props.value);
 }
 
 
-ReactDOM.render(<Game />, document.getElementById("game"));
+ReactDOM.render(React.createElement(Game, null), document.getElementById("game"));
