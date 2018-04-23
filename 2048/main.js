@@ -1,16 +1,31 @@
 
-// function toLeft(grids){
+function toLeft(grids){
+    for(let i=0;i<grids.length;i++){
+        for(let j=0;j<grids[i].length-1;j++){
+            for(let k=j+1;k<grids[i].length;k++){
+                if(grids[i][k] == 0) continue;
+                if(grids[i][j] == grids[i][k]){
+                    grids[i][j] *= 2;
+                    grids[i][k] = 0;
+                }
+                if(grids[i][j] == 0){
+                    grids[i][j] = grids[i][k];
+                    grids[i][k] = 0;
+                }
+            }
+        }
+    }
+    return grids;
+}
+function toRight(grids){
 
-// }
-// function toRight(grids){
+}
+function toUp(grids){
 
-// }
-// function toUp(grids){
+}
+function toDown(grids){
 
-// }
-// function toDown(grids){
-
-// }
+}
 // 游戏
 class Game extends React.Component{
     constructor(props){
@@ -18,17 +33,20 @@ class Game extends React.Component{
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.state = {
             grids:[
-                [2, 4, 6, 8],
-                [16, 32, 64, 128],
-                [256, 512, 1024, 2048],
-                [4096, 0, 0, 0]
+                [2, 2, 2, 2],
+                [2, 2, 2, 2],
+                [2, 2, 2, 2],
+                [2, 0, 0, 0]
             ]
         };
     }
     handleKeyDown(e){
+        const grids = this.state.grids;
         switch(e.keyCode){
             case 37:
-            console.log('left');
+            this.setState({
+                grids:toLeft(grids)
+            });
             // 左
             break;
             case 38:
@@ -76,8 +94,9 @@ function getcolor(value){
 }
 // 渲染格子
 function Unit(props){
-    var className = getcolor(props.value);
-    return <div className={className}>{props.value}</div>;
+    value = props.value;
+    var className = getcolor(value);
+    return <div className={className}>{value==0?"":value}</div>;
 }
 
 
