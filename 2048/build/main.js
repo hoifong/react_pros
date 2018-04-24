@@ -1,30 +1,76 @@
-
-function toLeft(grids){
-    for(let i=0;i<grids.length;i++){
-        for(let j=0;j<grids[i].length-1;j++){
-            for(let k=j+1;k<grids[i].length;k++){
-                if(grids[i][k] == 0) continue;
-                if(grids[i][j] == grids[i][k]){
-                    grids[i][j] *= 2;
-                    grids[i][k] = 0;
-                }
-                if(grids[i][j] == 0){
-                    grids[i][j] = grids[i][k];
-                    grids[i][k] = 0;
+keydownHandler={
+    ArrowLeft:function toLeft(grids){
+        for(let i=0;i<grids.length;i++){
+            for(let j=0;j<grids.length-1;j++){
+                for(let k=j+1;k<grids.length;k++){
+                    if(grids[i][k] == 0) continue;
+                    if(grids[i][j] == grids[i][k]){
+                        grids[i][j] *= 2;
+                        grids[i][k] = 0;
+                    }
+                    if(grids[i][j] == 0){
+                        grids[i][j] = grids[i][k];
+                        grids[i][k] = 0;
+                    }
                 }
             }
         }
+        return grids;
+    },
+    ArrowRight:function toRight(grids){
+        for(let i=0;i<grids.length;i++){
+            for(let j=grids.length-1;j>0;j--){
+                for(let k=j-1;k>=0;k--){
+                    if(grids[i][k] == 0)continue;
+                    if(grids[i][j] == grids[i][k]){
+                        grids[i][j] *= 2;
+                        grids[i][k] = 0;
+                    }
+                    if(grids[i][j] == 0){
+                        grids[i][j] = grids[i][k];
+                        grids[i][k] = 0;
+                    }
+                }
+            }
+        }
+        return grids;
+    },
+    ArrowUp:function toUp(grids){
+        for(let i=0;i<grids.length;i++){
+            for(let j=0;j<grids.length-1;j++){
+                for(let k=j+1;k<grids.length;k++){
+                    if(grids[k][i] == 0)continue;
+                    if(grids[j][i] == grids[k][i]){
+                        grids[j][i] *= 2;
+                        grids[k][i] = 0;
+                    }
+                    if(grids[j][i] == 0){
+                        grids[j][i] = grids[k][i];
+                        grids[k][i] = 0;
+                    }
+                }
+            }
+        } 
+        return grids;
+    },
+    ArrowDown:function toDown(grids){
+        for(let i=0;i<grids.length;i++){
+            for(let j=grids.length-1;j>0;j--){
+                for(let k=j-1;k>=0;k--){
+                    if(grids[k][i] == 0)continue;
+                    if(grids[j][i] == grids[k][i]){
+                        grids[j][i] *= 2;
+                        grids[k][i] = 0;
+                    }
+                    if(grids[j][i] == 0){
+                        grids[j][i] = grids[k][i];
+                        grids[k][i] = 0;
+                    }
+                }
+            }
+        } 
+        return grids;
     }
-    return grids;
-}
-function toRight(grids){
-
-}
-function toUp(grids){
-
-}
-function toDown(grids){
-
 }
 // 游戏
 class Game extends React.Component{
@@ -42,26 +88,11 @@ class Game extends React.Component{
     }
     handleKeyDown(e){
         const grids = this.state.grids;
-        switch(e.keyCode){
-            case 37:
-            this.setState({
-                grids:toLeft(grids)
-            });
-            // 左
-            break;
-            case 38:
-            console.log('up');
-            // 上
-            break;
-            case 39:
-            console.log('right');
-            // 右
-            break;
-            case 40:
-            console.log('down');
-            // 下
-            break;
-        }
+        if(keydownHandler[e.key] === undefined)
+            return
+        this.setState({
+            grids:keydownHandler[e.key](grids)
+        });
     }
     componentDidMount(){
         window.addEventListener('keydown', this.handleKeyDown);
