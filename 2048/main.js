@@ -72,6 +72,52 @@ keydownHandler={
         return grids;
     }
 }
+function countUnfilled(grids){
+    var counter = 0;
+    for(let i=0;i<grids.length;i++){
+        for(let j=0;j<grids.length;j++){
+            if(grids[i][j] == 0){
+                counter++;
+            }
+        }
+    }
+    return counter;
+}
+
+function getrandom(unfillednum){
+    if(unfillednum==0)
+        return -1;
+    var fill =Math.floor(Math.random()*unfillednum+1);
+    return fill;
+}
+
+function randomfilltwo(grids, unfillednum){
+    var fill1 = getrandom(unfillednum);
+    var fill2 = getrandom(unfillednum);
+    console.log([fill1, fill2]);
+    for(let i=0;i<grids.length;i++){
+        if(fill1<0&&fill2<0)break;
+        for(let j=0;j<grids.length;j++){
+            if(grids[i][j]==0){
+                if(fill1==1){
+                    grids[i][j]=2;
+                    fill1 = -1;
+                    continue;
+                }
+                if(fill2==1){
+                    grids[i][j]=2;
+                    fill2 = -1;
+                    continue
+                }
+
+                fill1--;
+                fill2--;
+            }
+        }
+    }
+    return grids;
+}
+
 // 游戏
 class Game extends React.Component{
     constructor(props){
@@ -87,12 +133,16 @@ class Game extends React.Component{
         };
     }
     handleKeyDown(e){
-        const grids = this.state.grids;
+        var grids = this.state.grids;
+        const unfillednum = countUnfilled(grids);        
         if(keydownHandler[e.key] === undefined)
             return
+        grids =randomfilltwo(keydownHandler[e.key](grids), unfillednum);
+
         this.setState({
             grids:keydownHandler[e.key](grids)
         });
+        getrandom(countUnfilled(grids));
     }
     componentDidMount(){
         window.addEventListener('keydown', this.handleKeyDown);
