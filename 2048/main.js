@@ -8,9 +8,12 @@ keydownHandler={
                         grids[i][j] *= 2;
                         grids[i][k] = 0;
                     }
-                    if(grids[i][j] == 0){
+                    else if(grids[i][j] == 0){
                         grids[i][j] = grids[i][k];
                         grids[i][k] = 0;
+                    }
+                    else{
+                        break;
                     }
                 }
             }
@@ -26,9 +29,12 @@ keydownHandler={
                         grids[i][j] *= 2;
                         grids[i][k] = 0;
                     }
-                    if(grids[i][j] == 0){
+                    else if(grids[i][j] == 0){
                         grids[i][j] = grids[i][k];
                         grids[i][k] = 0;
+                    }
+                    else{
+                        break;
                     }
                 }
             }
@@ -44,9 +50,12 @@ keydownHandler={
                         grids[j][i] *= 2;
                         grids[k][i] = 0;
                     }
-                    if(grids[j][i] == 0){
+                    else if(grids[j][i] == 0){
                         grids[j][i] = grids[k][i];
                         grids[k][i] = 0;
+                    }
+                    else{
+                        break;
                     }
                 }
             }
@@ -62,9 +71,12 @@ keydownHandler={
                         grids[j][i] *= 2;
                         grids[k][i] = 0;
                     }
-                    if(grids[j][i] == 0){
+                    else if(grids[j][i] == 0){
                         grids[j][i] = grids[k][i];
                         grids[k][i] = 0;
+                    }
+                    else{
+                        break;
                     }
                 }
             }
@@ -91,21 +103,47 @@ function getrandom(unfillednum){
     return fill;
 }
 
-function randomfilltwo(grids, unfillednum){
+function getmax(grids){
+    var max = 0;
+    for(let i=0;i<grids.length;i++){
+        for(let j=0;j<grids.length;j++){
+            if(max<grids[i][j]){
+                max = grids[i][j];
+            }
+        }
+    }
+    return max;
+}
+
+function anyCanMerge(grids){
+    if(grids[0][0] == grids[0][1]||grids[0][0] == grids[1][0]){
+        return true
+    }
+    for(let i=1;i<grids.length;i++){
+        for(let j=1;j<grids.length;j++){
+            if(grids[i][j] == grids[i][j-1]||grids[i][j] == grids[i-1][j]){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function randomfilltwo(grids){
+    const unfillednum = countUnfilled(grids);
     var fill1 = getrandom(unfillednum);
     var fill2 = getrandom(unfillednum);
-    console.log([fill1, fill2]);
     for(let i=0;i<grids.length;i++){
         if(fill1<0&&fill2<0)break;
         for(let j=0;j<grids.length;j++){
             if(grids[i][j]==0){
                 if(fill1==1){
-                    grids[i][j]=2;
+                    grids[i][j]=getrandom(2)*2;
                     fill1 = -1;
                     continue;
                 }
                 if(fill2==1){
-                    grids[i][j]=2;
+                    grids[i][j]=getrandom(2)*2;
                     fill2 = -1;
                     continue
                 }
@@ -118,39 +156,90 @@ function randomfilltwo(grids, unfillednum){
     return grids;
 }
 
+function Gridinit(){
+    var grids = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ];
+    randomfilltwo(grids);
+    return grids;
+}
+
 // 游戏
 class Game extends React.Component{
     constructor(props){
         super(props);
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.GameReStart = this.GameReStart.bind(this);
         this.state = {
-            grids:[
-                [2, 2, 2, 2],
-                [2, 2, 2, 2],
-                [2, 2, 2, 2],
-                [2, 0, 0, 0]
-            ]
+            grids:Gridinit(),
+            grade:0
         };
     }
     handleKeyDown(e){
         var grids = this.state.grids;
-        const unfillednum = countUnfilled(grids);        
-        if(keydownHandler[e.key] === undefined)
-            return
-        grids =randomfilltwo(keydownHandler[e.key](grids), unfillednum);
-
+        var unfillednum = countUnfilled(grids);        
+        // 得到空格个数
+        if(keydownHandler[e.key] === undefined){
+            return;
+        }
+        grids = randomfilltwo(keydownHandler[e.key](grids));
         this.setState({
-            grids:keydownHandler[e.key](grids)
+            grids:grids,
+            grade:getmax(grids)
         });
-        getrandom(countUnfilled(grids));
+        if(countUnfilled(grids)<1 && !anyCanMerge(grids)){
+            console.log('Game Over');
+        }
     }
+
+    GameReStart(){
+        this.setState({
+            grids:Gridinit(),
+            grade:0
+        });
+    }
+
     componentDidMount(){
+        // 绑定键入事件
         window.addEventListener('keydown', this.handleKeyDown);
     }
     render(){
         const grids = this.state.grids;
-        return <div>
+        const grade = this.state.grade;
+        return <div className='Game'>
+            <Title grade={grade} GameReStart={this.GameReStart}/>
             <Grid values={grids}/>
+        </div>
+    }
+}
+
+class Title extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            maxRecord:0
+        }
+    }
+
+    componentWillUpdate(){
+        const grade = this.props.grade;
+        if (grade > this.state.maxRecord){
+            this.setState({
+                maxRecord:grade
+            });
+        }
+    }
+
+    render(){
+        const maxRecord = this.state.maxRecord;
+        const grade = this.props.grade;
+        return <div className='title'>
+            <h2>2048</h2>
+            <small>当前最高纪录：<strong>{maxRecord}</strong>当前分数：<strong>{grade}</strong></small>
+            <a href='#' className='again' onClick={this.props.GameReStart}>重新来一局</a>
         </div>
     }
 }
@@ -163,7 +252,8 @@ function Grid(props){
     return <div className='Grid'>{units}</div>;
 }
 
-// 计算颜色及字体
+
+// 计算颜色
 function getcolor(value){
     var colors=[
         'def','c2','c4','c8','c16','c32','c64','c128','c256','c512','c1024','c2048','max'
