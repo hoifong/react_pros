@@ -186,16 +186,19 @@ class Game extends React.Component{
             return;
         }
         grids = randomfilltwo(keydownHandler[e.key](grids));
+        // 随机填充两个空格
         this.setState({
             grids:grids,
-            grade:getmax(grids)
+            grade:getmax(grids) // 最大值为分数
         });
         if(countUnfilled(grids)<1 && !anyCanMerge(grids)){
             console.log('Game Over');
+            // TODO...
         }
     }
 
     GameReStart(){
+        // 重新开始
         this.setState({
             grids:Gridinit(),
             grade:0
