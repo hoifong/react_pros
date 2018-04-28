@@ -1,0 +1,65 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    width: 100%;
+}
+#game{
+    width: auto;
+    max-width: 500px;
+    border: 1px solid blueviolet;
+    padding: 10px;
+    margin: auto;
+}
+/* info */
+.Info{
+    width: 100%;
+    border: 1px solid seagreen;
+}
+.inp-group{
+    display: inline-block;
+    width: 100px;
+}
+.inp-group input{
+    max-width: 50px;
+    font-size: 20px;
+}
+/* grid */
+.Grid{
+    margin: auto;
+    text-align: center;
+    font-size: 0;
+}
+.Grid>div{
+    display: inline-block;
+    clear: both;
+}
+.cell{
+    display: inline-block;
+    float: left;
+    width: 18px;
+    height: 18px;
+    background: #aaa;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    margin-left:1px;
+}
+.cell:hover, .indent{
+    background-color: burlywood;
+}
+.init{
+    background-color: #aaa;
+}
+.flag{
+    background: url('./source/flag.png') no-repeat center;
+}
+.mine-red{
+    background: url('./source/mine-red.png') no-repeat center;
+}
+.mine-black{
+    background: url('./source/mine-black.png') no-repeat center;
+}
+.unsure{
+    background: url('./source/unsure.png') no-repeat center;
+}
