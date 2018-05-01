@@ -9,6 +9,11 @@ const STATUS = {
     UNSURE:0x1003,
     INDENT:0x1004
 };
+const EVENTCODE={ 
+    EVENT_MD : 0x1001,  // 鼠标按下
+    EVENT_MU : 0x1002,  // 鼠标抬起
+    EVENT_CM : 0x1003   // 右键
+};
 const initCell = function(val, status){
     if (val == undefined)
         val = VAL.BLANK;
@@ -135,15 +140,34 @@ class Info extends React.Component{
 class Cell extends React.Component{
     constructor(props){
         super(props);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleContextMenu = this.handleContextMenu.bind(this);
     }
     // handleClick(e){
     // }
-    handleMouseDown(){
+    // 事件均交给上级处理
+    handleMouseDown(e){
+        e.preventDefault();
+        this.props.handleEvent(this.props.pos, EVENTCODE.EVENT_MD);
+    }
+    handleMouseUp(e){
+        e.preventDefault();
+        this.props.handleEvent(this.props.pos, EVENTCODE.EVENT_MU);
+    }
+    handleContextMenu(e){
+        e.preventDefault();
+        // this.props.handleEvent(this.props.pos, EVENTCODE.EVENT_CM);
     }
     // handleMouseUp(){
     // }
     render(){
-        return <div className='cell'></div>
+        return <div 
+            className='cell' 
+            onMouseDown={this.handleMouseDown} 
+            onMouseUp={this.handleMouseUp} 
+            onContextMenu={this.handleContextMenu}>
+        </div>
     }
 }
 
@@ -156,16 +180,40 @@ class Grid extends React.Component{
         this.state = {
             grid:GridInit(minenum,width,height)
         };
+
+        this.handleEvent = this.handleEvent.bind(this);
+    }
+    handleEvent(pos, eventkind){
+        // 处理单元格传来的事件
+        console.log(pos);
+        const grid = this.state.grid;
+        const cellstatus = grid[pos[0]][pos[1]];
+        switch(eventkind){
+            case EVENTCODE.EVENT_MD:
+            // 鼠标按下
+            console.log('鼠标按下了');
+            break;
+            case EVENTCODE.EVENT_MU:
+            // 鼠标抬起
+            console.log('鼠标抬起了');
+            break;
+            case EVENTCODE.EVENT_CM:
+            // 右键
+            console.log('点击了右键');
+            break;
+        }
     }
     render(){
         var grid = this.state.grid;
-        var show = grid.map(function(row, xindex){
+        var handleEvent = this.handleEvent;
+        var view = grid.map(function(row, xindex){
             return <div>{row.map(function(val, yindex){
-                return <Cell pos={[xindex,yindex]} status={val}/>;
+                {/* 向下传递格子的位置，以及状态值（value、status）,事件反应 */}
+                return <Cell pos={[xindex,yindex]} handleEvent={handleEvent}/>;
             })}</div>;
         });
         return <div className='Grid'>
-            {show}
+            {view}
         </div>;
     }
 }
