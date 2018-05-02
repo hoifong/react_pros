@@ -7,7 +7,7 @@ html,body{
 }
 #game{
     width: auto;
-    max-width: 500px;
+    max-width: 100%;
     border: 1px solid blueviolet;
     padding: 10px;
     margin: auto;
@@ -16,10 +16,11 @@ html,body{
 .Info{
     width: 100%;
     border: 1px solid seagreen;
+    text-align: center;
 }
 .inp-group{
     display: inline-block;
-    width: 100px;
+    width: 200px;
 }
 .inp-group input{
     max-width: 50px;
@@ -30,36 +31,52 @@ html,body{
     margin: auto;
     text-align: center;
     font-size: 0;
+    overflow-x: scroll;
+    
 }
 .Grid>div{
-    display: inline-block;
+    /* display: inline-block; */
     clear: both;
 }
 .cell{
     display: inline-block;
-    float: left;
-    width: 18px;
-    height: 18px;
-    background: #aaa;
+    /* float: left; */
+    width: 16px;
+    height: 16px;
+
     border: 1px solid #ddd;
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     margin-left:1px;
 }
-.cell:hover, .indent{
+.init:hover, .indent{
     background-color: burlywood;
 }
 .init{
     background-color: #aaa;
 }
 .flag{
-    background: url('./source/flag.png') no-repeat center;
+    background: url('./source/ass.png') no-repeat -32px 0px;
 }
 .mine-red{
-    background: url('./source/mine-red.png') no-repeat center;
+    background: url('./source/ass.png') no-repeat -16px 0px;
 }
 .mine-black{
-    background: url('./source/mine-black.png') no-repeat center;
+    background: url('./source/ass.png') no-repeat -48px 0px;
 }
 .unsure{
-    background: url('./source/unsure.png') no-repeat center;
+    background: url('./source/ass.png') no-repeat 0px 0px;
 }
+.number{
+    background-image: url('./source/number.png');
+    background-repeat: no-repeat;
+}
+.n0{background-position-x: 0px;}
+.n1{background-position-x: -16px;}
+.n2{background-position-x: -32px;}
+.n3{background-position-x: -48px;}
+.n4{background-position-x: -64px;}
+.n5{background-position-x: -80px;}
+.n6{background-position-x: -96px;}
+.n7{background-position-x: -112px;}
+.n8{background-position-x: -128px;}
+.n9{background-position-x: -144px;}
