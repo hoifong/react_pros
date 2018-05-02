@@ -251,7 +251,7 @@ function findConnectBlank(grid, pos,marks){
         if(marks[i][0] == x && marks[i][1] == y)return marks;
     }
     marks.push([x,y]);
-    if(grid[x][y].val>VAL.BLANK)return marks;
+    if(grid[x][y].val!=VAL.BLANK)return marks;
     if(x+1<grid.length)marks = findConnectBlank(grid, [x+1,y],marks);
     if(x-1>=0)marks = findConnectBlank(grid, [x-1,y],marks);
     if(y+1<grid[0].length)marks = findConnectBlank(grid, [x,y+1],marks);
