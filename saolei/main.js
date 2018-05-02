@@ -428,7 +428,6 @@ class Game extends React.Component{
             width:20,
             height:20,
             flagnum:0,
-            known:0,
             update:2,
         };
 
@@ -443,6 +442,7 @@ class Game extends React.Component{
     }
     startGame(minenum, width, height){
         this.setState({
+            flagnum:0,
             minenum:minenum,
             width:width,
             height:height,
